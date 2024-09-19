@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import ToDoTable from "./components/ToDoTable";
 import AddToDoComponent from "./components/AddToDoComponent";
+import ToDoStats from "./components/ToDoStats";
 
 function App() {
   const [toDos, setToDos] = useState([]); 
@@ -43,9 +44,12 @@ function App() {
         onChange={handleSearchChange}
       />
       <ToDoTable toDos={filteredToDos} onRemoveToDo={handleRemoveToDo} />
+      <ToDoStats tasks={toDos} /> {/* Використовуємо ToDoStats */}
     </>
   );
 }
+
+
 
 export default App;
 
