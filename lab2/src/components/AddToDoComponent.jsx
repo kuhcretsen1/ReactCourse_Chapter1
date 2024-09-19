@@ -1,12 +1,17 @@
 import React from "react";
 
-const AddToDOComponent = ({ title = "", onTitleChange, onSubmit }) => {
+const AddToDoComponent = ({ newToDo, onNewToDoChange, onAddToDo }) => {
   return (
-    <form>
-      <input value={title} onChange={onTitleChange} />
-      <button onClick={onSubmit}>Add</button>
+    <form onSubmit={onAddToDo}>
+      <input
+        type="text"
+        placeholder="Add new ToDo"
+        value={newToDo}
+        onChange={onNewToDoChange}
+      />
+      <button type="submit">Add</button>
     </form>
   );
 };
 
-export default AddToDOComponent;
+export default AddToDoComponent;

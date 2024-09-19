@@ -1,33 +1,51 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import ToDoTable from "./components/ToDoTable";
-import AddToDOComponent from "./components/AddToDOComponent";
+import AddToDoComponent from "./components/AddToDoComponent";
 
 function App() {
-  const [toDos, setToDos] = useState([]);
-  const [newToDo, setNewToDo] = useState(null);
+  const [toDos, setToDos] = useState([]); 
+  const [newToDo, setNewToDo] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState(""); 
 
-  function handleNewTitleChange(event) {
-    setNewToDo({ id: Math.random(), title: event.target.value });
-  }
-
-  function handleSubmit(event) {
+  const handleAddToDo = (event) => {
     event.preventDefault();
-    setToDos([...toDos, newToDo]);
-  }
+    if (newToDo) {
+      setToDos([...toDos, { id: Math.random(), title: newToDo }]);
+      setNewToDo(""); 
+    }
+  };
+
+  const handleRemoveToDo = (id) => {
+    setToDos(toDos.filter((toDo) => toDo.id !== id));
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredToDos = toDos.filter((toDo) =>
+    toDo.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
-      <AddToDOComponent
-        title={newToDo?.title}
-        onTitleChange={handleNewTitleChange}
-        onSubmit={handleSubmit}
+      <h1>ToDo App</h1>
+      <AddToDoComponent
+        newToDo={newToDo}
+        onNewToDoChange={(e) => setNewToDo(e.target.value)}
+        onAddToDo={handleAddToDo}
       />
-      <ToDoTable toDos={toDos} />
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+      <ToDoTable toDos={filteredToDos} onRemoveToDo={handleRemoveToDo} />
     </>
   );
 }
 
 export default App;
+
