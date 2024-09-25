@@ -6,7 +6,7 @@ const ToDoTable = ({ toDos, onRemoveToDo }) => {
       <thead>
         <tr>
           <th>Id</th>
-          
+          <th>Is Complititet</th>
           <th>Title</th>
           <th>Actions</th>
         </tr>
@@ -16,6 +16,7 @@ const ToDoTable = ({ toDos, onRemoveToDo }) => {
           <tr key={toDo.id}>
             <td>{toDo.id}</td>
             <td>{toDo.title}</td>
+            <td><input type="radio" checked ={toDo.completed} /></td>
             <td>
               <button onClick={() => onRemoveToDo(toDo.id)}>Remove</button>
             </td>
@@ -28,4 +29,5 @@ const ToDoTable = ({ toDos, onRemoveToDo }) => {
 
 
 export default ToDoTable;
+
 
