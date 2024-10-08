@@ -2,9 +2,9 @@ import React,{useEffect,useState} from "react";
 import ToDoTable from "./ToDoTable";
 import AddToDoComponent from "./AddToDoComponent";
 import ToDoStats from "./ToDoStats";
+import SearchInput from "./SearchInput";
 
 function TodoContainer(){
-
 
 const [toDos, setToDos] = useState([]); 
 const [newToDo, setNewToDo] = useState(""); 
@@ -37,12 +37,7 @@ return (
         onNewToDoChange={(e) => setNewToDo(e.target.value)}
         onAddToDo={handleAddToDo}
       />
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
+     <SearchInput/>
       <ToDoTable toDos={filteredToDos} onRemoveToDo={handleRemoveToDo} />
       <ToDoStats tasks={toDos} /> {/* Використовуємо ToDoStats */}
     </>
