@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const AddressForm = ({ addBook, editingBook }) => {
   const [firstName, setFirstName] = useState('');
@@ -24,9 +24,9 @@ const AddressForm = ({ addBook, editingBook }) => {
         editingBook.firstName = firstName;
         editingBook.lastName = lastName;
         editingBook.phone = phone;
+        addBook(editingBook); // Передаємо оновлений контакт
       } else {
-        
-        addBook({ firstName, lastName, phone });
+        addBook({ firstName, lastName, phone, id: Math.random() }); // Генеруємо ID
       }
       setFirstName('');
       setLastName('');
