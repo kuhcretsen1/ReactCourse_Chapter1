@@ -11,27 +11,39 @@ function App() {
   ];
 
   const addToCart = (product) => {
-    setCart([...cart, product]);
+    if (!cart.some((item) => item.id === product.id)) {
+      setCart([...cart, product]);
+    }
   };
 
+
+  const total = cart.reduce((acc, item) => acc + item.price, 0);
+
+
+  const clearCart = () => {
+    setCart([]);
+  };
+  
   return (
     <div className="App">
       <header>
-        <h1>Маркетплейс</h1>
+        <h1>Маркетplace</h1>
       </header>
 
       <main>
         <h2>Список товарів</h2>
         <div className="product-list">
+        <button onClick={clearCart}>Очистити кошик</button>
           {products.map((product) => (
             <div key={product.id} className="product-card">
               <h3>{product.name}</h3>
               <p>Ціна: {product.price} грн</p>
               <button onClick={() => addToCart(product)}>Додати в кошик</button>
             </div>
+            
           ))}
         </div>
-
+        <h3>Загальна вартість: {total} грн</h3>
         <h2>Кошик</h2>
         <div className="cart">
           {cart.length === 0 ? (

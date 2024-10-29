@@ -5,11 +5,14 @@ const ProductCard = ({ product, onAddToCart }) => {
     <div style={cardStyle}>
       <h2>{product.name}</h2>
       <p>Ціна: {product.price} грн</p>
+      
       <button onClick={() => onAddToCart(product)}>Додати до кошика</button>
     </div>
   );
 };
 
+
+  
 const cardStyle = {
   border: '1px solid #ddd',
   padding: '16px',
