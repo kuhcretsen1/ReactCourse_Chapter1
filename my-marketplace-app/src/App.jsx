@@ -1,17 +1,33 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Використовуйте Routes замість Switch у версії 6
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
+import { fetchProducts } from './api/productsAPI';
 
 function App() {
   const [cart, setCart] = useState([]);
   const [username, setUsername] = useState(null); 
+  const [products, setProducts] = useState([]); // Стан для продуктів
+  const [isLoading, setIsLoading] = useState(true); // Стан завантаження
+  const [error, setError] = useState(null); // Стан для помилки
 
-  const products = [
-    { id: 1, name: 'Товар 1', price: 100 },
-    { id: 2, name: 'Товар 2', price: 200 },
-    { id: 3, name: 'Товар 3', price: 300 },
-  ];
+  // Завантаження продуктів при першому рендері
+  useEffect(() => {
+    const loadProducts = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (err) {
+        setError('Помилка при завантаженні товарів');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const addToCart = (product) => {
     if (!cart.some((item) => item.id === product.id)) {
@@ -26,7 +42,7 @@ function App() {
   };
 
   const handleLogin = (username) => {
-    setUsername(username); // Збереження ім'я користувача
+    setUsername(username); 
   };
 
   return (
@@ -45,15 +61,23 @@ function App() {
                 username ? (
                   <>
                     <h2>Список товарів</h2>
-                    <button onClick={clearCart}>Очистити кошик</button>
-                    {products.map((product) => (
-                      <div key={product.id} className="product-card">
-                        <h3>{product.name}</h3>
-                        <p>Ціна: {product.price} грн</p>
-                        <button onClick={() => addToCart(product)}>Додати в кошик</button>
-                      </div>
-                    ))}
-                    <h3>Загальна вартість: {total} грн</h3>
+                    {isLoading ? (
+                      <p>Завантаження...</p>
+                    ) : error ? (
+                      <p>{error}</p>
+                    ) : (
+                      <>
+                        <button onClick={clearCart}>Очистити кошик</button>
+                        {products.map((product) => (
+                          <div key={product.id} className="product-card">
+                            <h3>{product.title}</h3>
+                            <p>Ціна: {product.price} грн</p>
+                            <button onClick={() => addToCart(product)}>Додати в кошик</button>
+                          </div>
+                        ))}
+                        <h3>Загальна вартість: {total} грн</h3>
+                      </>
+                    )}
                     <h2>Кошик</h2>
                     <div className="cart">
                       {cart.length === 0 ? (
@@ -61,7 +85,7 @@ function App() {
                       ) : (
                         cart.map((item, index) => (
                           <div key={index} className="cart-item">
-                            <p>{item.name} - {item.price} грн</p>
+                            <p>{item.title} - {item.price} грн</p>
                           </div>
                         ))
                       )}

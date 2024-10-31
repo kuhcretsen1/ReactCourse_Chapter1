@@ -11,6 +11,28 @@ const ProductCard = ({ product, onAddToCart }) => {
   );
 };
 
+const [isLoading, setIsLoading] = useState(true);
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  const loadProducts = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await fetchProducts();
+      setProducts(data);
+    } catch (err) {
+      setError('Помилка при завантаженні товарів');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadProducts();
+}, []);
+
+if (isLoading) return <p>Завантаження...</p>;
+if (error) return <p>{error}</p>;
 
   
 const cardStyle = {
