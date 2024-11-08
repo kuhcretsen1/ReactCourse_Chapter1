@@ -1,9 +1,8 @@
-// src/api/productsAPI.js
 const API_URL = 'https://fakestoreapi.com/products';
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(`${API_URL}?_page=${page}&_limit=${limit}`);
     if (!response.ok) {
       throw new Error('Failed to fetch products');
     }

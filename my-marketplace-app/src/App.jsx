@@ -1,3 +1,4 @@
+// App.js
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
@@ -7,18 +8,18 @@ import { fetchProducts } from './api/productsAPI';
 function App() {
   const [cart, setCart] = useState([]);
   const [username, setUsername] = useState(null); 
-  const [products, setProducts] = useState([]); // Стан для продуктів
-  const [isLoading, setIsLoading] = useState(true); // Стан завантаження
-  const [error, setError] = useState(null); // Стан для помилки
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1); // Сторінка для пагінації
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Завантаження продуктів при першому рендері
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchProducts();
-        setProducts(data);
+        const data = await fetchProducts(page); // Завантажуємо поточну сторінку
+        setProducts((prevProducts) => [...prevProducts, ...data]);
       } catch (err) {
         setError('Помилка при завантаженні товарів');
       } finally {
@@ -27,7 +28,11 @@ function App() {
     };
 
     loadProducts();
-  }, []);
+  }, [page]);
+
+  const loadMoreProducts = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   const addToCart = (product) => {
     if (!cart.some((item) => item.id === product.id)) {
@@ -75,6 +80,7 @@ function App() {
                             <button onClick={() => addToCart(product)}>Додати в кошик</button>
                           </div>
                         ))}
+                        <button onClick={loadMoreProducts}>Завантажити більше</button>
                         <h3>Загальна вартість: {total} грн</h3>
                       </>
                     )}
