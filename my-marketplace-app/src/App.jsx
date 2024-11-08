@@ -73,13 +73,13 @@ function App() {
                     ) : (
                       <>
                         <button onClick={clearCart}>Очистити кошик</button>
-                        {products.map((product) => (
-                          <div key={product.id} className="product-card">
-                            <h3>{product.title}</h3>
-                            <p>Ціна: {product.price} грн</p>
-                            <button onClick={() => addToCart(product)}>Додати в кошик</button>
-                          </div>
-                        ))}
+                        {products.map((product, index) => (
+  <div key={`${product.id}-${index}`} className="product-card">
+    <h3>{product.title}</h3>
+    <p>Ціна: {product.price} грн</p>
+    <button onClick={() => addToCart(product)}>Додати в кошик</button>
+  </div>
+))}
                         <button onClick={loadMoreProducts}>Завантажити більше</button>
                         <h3>Загальна вартість: {total} грн</h3>
                       </>

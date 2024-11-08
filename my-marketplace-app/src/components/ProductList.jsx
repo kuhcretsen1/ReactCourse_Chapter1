@@ -11,7 +11,6 @@ const ProductList = ({ products, onAddToCart }) => {
   );
 };
 
-
 const listStyle = {
   display: 'flex',
   flexDirection: 'column',
