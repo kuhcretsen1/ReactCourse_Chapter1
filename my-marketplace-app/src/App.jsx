@@ -1,112 +1,37 @@
-// App.js
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
+import Marketplace from './pages/Marketplace';
 import { fetchProducts } from './api/productsAPI';
+import { CartProvider } from "./contexts/CartContext";
+import { UserProvider, useUser } from "./contexts/UserContext";
 
 function App() {
-  const [cart, setCart] = useState([]);
-  const [username, setUsername] = useState(null); 
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1); // Сторінка для пагінації
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await fetchProducts(page); // Завантажуємо поточну сторінку
-        setProducts((prevProducts) => [...prevProducts, ...data]);
-      } catch (err) {
-        setError('Помилка при завантаженні товарів');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, [page]);
-
-  const loadMoreProducts = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const addToCart = (product) => {
-    if (!cart.some((item) => item.id === product.id)) {
-      setCart([...cart, product]);
-    }
-  };
-
-  const total = cart.reduce((acc, item) => acc + item.price, 0);
-
-  const clearCart = () => {
-    setCart([]);
-  };
-
-  const handleLogin = (username) => {
-    setUsername(username); 
-  };
-
   return (
-    <Router>
-      <div className="App">
-        <header>
-          <h1>Маркетplace</h1>
-        </header>
-
-        <main>
-          <Routes>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route
-              path="/"
-              element={
-                username ? (
-                  <>
-                    <h2>Список товарів</h2>
-                    {isLoading ? (
-                      <p>Завантаження...</p>
-                    ) : error ? (
-                      <p>{error}</p>
-                    ) : (
-                      <>
-                        <button onClick={clearCart}>Очистити кошик</button>
-                        {products.map((product, index) => (
-  <div key={`${product.id}-${index}`} className="product-card">
-    <h3>{product.title}</h3>
-    <p>Ціна: {product.price} грн</p>
-    <button onClick={() => addToCart(product)}>Додати в кошик</button>
-  </div>
-))}
-                        <button onClick={loadMoreProducts}>Завантажити більше</button>
-                        <h3>Загальна вартість: {total} грн</h3>
-                      </>
-                    )}
-                    <h2>Кошик</h2>
-                    <div className="cart">
-                      {cart.length === 0 ? (
-                        <p>Кошик порожній</p>
-                      ) : (
-                        cart.map((item, index) => (
-                          <div key={index} className="cart-item">
-                            <p>{item.title} - {item.price} грн</p>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <UserProvider>
+      <CartProvider>
+        <Router>
+          <div className="App">
+            <header>
+              <h1>Маркетplace</h1>
+            </header>
+            <main>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<ProtectedRoute />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </CartProvider>
+    </UserProvider>
   );
 }
+
+const ProtectedRoute = () => {
+  const { username } = useUser();
+  return username ? <Marketplace /> : <Navigate to="/login" />;
+};
 
 export default App;

@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [inputValue, setInputValue] = useState('');
-  const navigate = useNavigate(); // Додаємо useNavigate
+  const navigate = useNavigate();
+  const { setUsername } = useUser(); // Отримуємо функцію для встановлення імені користувача з контексту
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
-      onLogin(inputValue);
-      navigate('/'); // Перенаправлення на основну сторінку після входу
+      setUsername(inputValue); // Встановлюємо ім'я користувача в контексті
+      navigate('/'); // Перенаправляємо на основну сторінку після входу
     }
   };
 
