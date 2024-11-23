@@ -1,11 +1,11 @@
-// Marketplace.js
 import { useState, useEffect } from 'react';
 import { fetchProducts } from '../api/productsAPI';
-import { useCart } from '../contexts/CartContext.jsx';
-import { useUser } from '../contexts/UserContext.jsx';
+import { useCart } from '../contexts/CartContext';
+import { useUser } from '../contexts/UserContext';
+import ProductForm from '../components/ProductForm';
 
 const Marketplace = () => {
-  const { cart, addToCart, clearCart, total } = useCart();
+  const { cart, addToCart, clearCart, total } = useCart(); // використання addToCart з useCart
   const { username } = useUser();
 
   const [products, setProducts] = useState([]);
@@ -14,6 +14,7 @@ const Marketplace = () => {
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [filterText, setFilterText] = useState('');
+  const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -40,6 +41,32 @@ const Marketplace = () => {
     setFilterText(e.target.value);
   };
 
+  const handleAddOrUpdateProduct = (product) => {
+    if (product.id) {
+      // Оновлення товару
+      setProducts((prevProducts) =>
+        prevProducts.map((p) => (p.id === product.id ? product : p))
+      );
+    } else {
+      // Додавання нового товару
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        { ...product, id: Date.now() },
+      ]);
+    }
+    setEditingProduct(null); // Скидаємо редагований товар
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product); // Заповнюємо форму для редагування товару
+  };
+
+  const handleDeleteProduct = (productId) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== productId)
+    );
+  };
+
   const sortedAndFilteredProducts = products
     .filter((product) =>
       product.title.toLowerCase().includes(filterText.toLowerCase())
@@ -62,6 +89,9 @@ const Marketplace = () => {
         value={filterText}
         onChange={handleFilterChange}
       />
+
+      <ProductForm onSubmit={handleAddOrUpdateProduct} existingProduct={editingProduct} />
+
       {isLoading ? (
         <p>Завантаження...</p>
       ) : error ? (
@@ -80,6 +110,8 @@ const Marketplace = () => {
               <h3>{product.title}</h3>
               <p>Ціна: {product.price} грн</p>
               <button onClick={() => addToCart(product)}>Додати в кошик</button>
+              <button onClick={() => handleEditProduct(product)}>Редагувати</button>
+              <button onClick={() => handleDeleteProduct(product.id)}>Видалити</button>
             </div>
           ))}
           <button onClick={loadMoreProducts}>Завантажити більше</button>

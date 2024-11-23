@@ -6,12 +6,15 @@ import Marketplace from './pages/Marketplace';
 import { fetchProducts } from './api/productsAPI';
 import { CartProvider } from "./contexts/CartContext";
 import { UserProvider, useUser } from "./contexts/UserContext";
+import CartPage from './components/CartPage';
+import Header from './pages/Header';
 
 function App() {
   return (
     <UserProvider>
       <CartProvider>
         <Router>
+        <Header /> {/* Хедер тут буде відображатись на всіх сторінках */}
           <div className="App">
             <header>
               <h1>Маркетplace</h1>
@@ -20,6 +23,7 @@ function App() {
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<ProtectedRoute />} />
+                <Route path="/cart" element={<CartPage />} /> {/* маршрут для кошика */}
               </Routes>
             </main>
           </div>
