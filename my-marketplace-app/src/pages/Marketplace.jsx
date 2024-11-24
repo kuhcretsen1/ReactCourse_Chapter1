@@ -80,59 +80,45 @@ const Marketplace = () => {
       return 0;
     });
 
-  return (
-    <div>
-      <h2>Список товарів</h2>
-      <input
-        type="text"
-        placeholder="Фільтрувати товари"
-        value={filterText}
-        onChange={handleFilterChange}
-      />
-
-      <ProductForm onSubmit={handleAddOrUpdateProduct} existingProduct={editingProduct} />
-
-      {isLoading ? (
-        <p>Завантаження...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <>
-          <button onClick={clearCart}>Очистити кошик</button>
-
-          {/* Кнопки сортування */}
-          <button onClick={() => setSortOrder('asc')}>Сортувати за ціною (зростання)</button>
-          <button onClick={() => setSortOrder('desc')}>Сортувати за ціною (спадання)</button>
-          <button onClick={() => setSortOrder(null)}>Скинути сортування</button>
-
-          {sortedAndFilteredProducts.map((product, index) => (
-            <div key={`${product.id}-${index}`} className="product-card">
-              <h3>{product.title}</h3>
-              <p>Ціна: {product.price} грн</p>
-              <button onClick={() => addToCart(product)}>Додати в кошик</button>
-              <button onClick={() => handleEditProduct(product)}>Редагувати</button>
-              <button onClick={() => handleDeleteProduct(product.id)}>Видалити</button>
-            </div>
-          ))}
-          <button onClick={loadMoreProducts}>Завантажити більше</button>
-          <h3>Загальна вартість: {total} грн</h3>
-        </>
-      )}
-
-      <h2>Кошик</h2>
-      <div className="cart">
-        {cart.length === 0 ? (
-          <p>Кошик порожній</p>
+    return (
+      <div>
+        <h2>Список товарів</h2>
+        <input
+          type="text"
+          placeholder="Фільтрувати товари"
+          value={filterText}
+          onChange={handleFilterChange}
+        />
+  
+        <ProductForm onSubmit={handleAddOrUpdateProduct} existingProduct={editingProduct} />
+  
+        {isLoading ? (
+          <p>Завантаження...</p>
+        ) : error ? (
+          <p>{error}</p>
         ) : (
-          cart.map((item, index) => (
-            <div key={index} className="cart-item">
-              <p>{item.title} - {item.price} грн</p>
-            </div>
-          ))
+          <>
+            <button onClick={clearCart}>Очистити кошик</button>
+  
+            {/* Кнопки сортування */}
+            <button onClick={() => setSortOrder('asc')}>Сортувати за ціною (зростання)</button>
+            <button onClick={() => setSortOrder('desc')}>Сортувати за ціною (спадання)</button>
+            <button onClick={() => setSortOrder(null)}>Скинути сортування</button>
+  
+            {sortedAndFilteredProducts.map((product, index) => (
+              <div key={`${product.id}-${index}`} className="product-card">
+                <h3>{product.title}</h3>
+                <p>Ціна: {product.price} грн</p>
+                <button onClick={() => addToCart(product)}>Додати в кошик</button>
+                <button onClick={() => handleEditProduct(product)}>Редагувати</button>
+                <button onClick={() => handleDeleteProduct(product.id)}>Видалити</button>
+              </div>
+            ))}
+            <button onClick={loadMoreProducts}>Завантажити більше</button>
+          </>
         )}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default Marketplace;

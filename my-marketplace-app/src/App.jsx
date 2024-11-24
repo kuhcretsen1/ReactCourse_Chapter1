@@ -16,9 +16,7 @@ function App() {
         <Router>
         <Header /> {/* Хедер тут буде відображатись на всіх сторінках */}
           <div className="App">
-            <header>
-              <h1>Маркетplace</h1>
-            </header>
+          
             <main>
               <Routes>
                 <Route path="/login" element={<Login />} />
