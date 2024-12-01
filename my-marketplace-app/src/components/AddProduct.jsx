@@ -1,49 +1,54 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../contexts/ProductsContext';
+import { useForm } from 'react-hook-form'; // Імпортуємо useForm
 
 const AddProduct = () => {
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
   const { addProduct } = useProducts();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addProduct({ title, price: parseFloat(price), description });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm(); // Використовуємо useForm для роботи з формою та валідацією
+
+  const onSubmit = (data) => {
+    addProduct({
+      title: data.productName,
+      price: parseFloat(data.price),
+      description: data.description,
+    });
     navigate('/'); // Повертаємось до маркетплейсу
   };
 
   return (
     <div>
       <h2>Додати новий товар</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label>Назва товару:</label>
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
+            {...register('productName', { required: 'Product name is required' })}
           />
+          {errors.productName && <span>{errors.productName.message}</span>} {/* Показуємо помилку валідації */}
         </div>
+
         <div>
           <label>Ціна:</label>
           <input
             type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
+            {...register('price', { required: 'Price is required', valueAsNumber: true })}
           />
+          {errors.price && <span>{errors.price.message}</span>}
         </div>
+
         <div>
           <label>Опис:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+          <textarea {...register('description')}></textarea>
         </div>
+
         <button type="submit">Додати товар</button>
       </form>
     </div>

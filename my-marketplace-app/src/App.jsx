@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AddProduct from './components/AddProduct';
 import { ProductsProvider } from './contexts/ProductsContext';
 import EditProduct from './pages/EditProduct';
+import NotFound from './pages/NotFound.jsx'; // Додано імпорт NotFound
+import Layout from './components/Layout.jsx';
 
 function App() {
   return (
@@ -17,15 +19,15 @@ function App() {
       <CartProvider>
         <ProductsProvider>
           <Router>
-            <Header />
             <div className="App">
               <main>
                 <Routes>
                   <Route path="/login" element={<Login />} />
-                  <Route path="/" element={<ProtectedRoute element={<Marketplace />} />} />
+                  <Route path="/" element={<ProtectedRoute element={<Layout><Marketplace /></Layout>} />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/add-product" element={<ProtectedRoute element={<AddProduct />} />} />
                   <Route path="/edit-product/:id" element={<ProtectedRoute element={<EditProduct />} />} />
+                  <Route path="*" element={<NotFound />} /> {/* Використовуємо NotFound */}
                 </Routes>
               </main>
             </div>
@@ -35,5 +37,6 @@ function App() {
     </UserProvider>
   );
 }
+
 
 export default App;

@@ -1,8 +1,14 @@
 import { useCart } from '../contexts/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
   const { cart, clearCart, total } = useCart();
+  const navigate = useNavigate();  // Імпортуємо useNavigate для перенаправлення
+
+  const handleClearCart = () => {
+    clearCart();  // Очищаємо кошик
+    navigate('/');  // Перехід на сторінку товарів
+  };
 
   return (
     <div>
@@ -19,7 +25,7 @@ const CartPage = () => {
             ))}
           </div>
           <h3>Загальна вартість: {total} грн</h3>
-          <button onClick={clearCart}>Очистити кошик</button>
+          <button onClick={handleClearCart}>Очистити кошик</button>
           <Link to="/">Продовжити покупки</Link>
         </>
       )}

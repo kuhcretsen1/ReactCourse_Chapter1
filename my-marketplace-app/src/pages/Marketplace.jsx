@@ -15,6 +15,7 @@ const Marketplace = () => {
   const handleFilterChange = (e) => setFilterText(e.target.value);
   const handleSortChange = (e) => setSortOption(e.target.value);
 
+ 
   const filteredProducts = products
     .filter((product) =>
       product.title.toLowerCase().includes(filterText.toLowerCase())
@@ -59,6 +60,7 @@ const Marketplace = () => {
           </Link>
           <button onClick={clearCart} className="clear-cart-button">
             Очистити кошик
+            
           </button>
         </div>
       </div>

@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import CartIcon from "../components/CartIcon";
+import { useUser } from "../contexts/UserContext";
 
 const Header = () => {
+  const { username, logout } = useUser();
+
   return (
     <header>
       <div>
@@ -9,6 +12,11 @@ const Header = () => {
       </div>
       <div>
         <CartIcon />
+        {username && (
+          <button onClick={logout} style={{ marginLeft: "1rem" }}>
+            Вийти
+          </button>
+        )}
       </div>
     </header>
   );
