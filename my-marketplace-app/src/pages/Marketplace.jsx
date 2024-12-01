@@ -1,124 +1,98 @@
-import { useState, useEffect } from 'react';
-import { fetchProducts } from '../api/productsAPI';
+import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
-import { useUser } from '../contexts/UserContext';
-import ProductForm from '../components/ProductForm';
+import { useProducts } from '../contexts/ProductsContext';
+import { Link } from 'react-router-dom';
+import './Marketplace.css';
 
 const Marketplace = () => {
-  const { cart, addToCart, clearCart, total } = useCart(); // використання addToCart з useCart
-  const { username } = useUser();
-
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
+  const { addToCart, clearCart } = useCart();
+  const { products } = useProducts();
   const [filterText, setFilterText] = useState('');
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [sortOption, setSortOption] = useState('');
+  const [currentPage, setCurrentPage] = useState(1); // Стан для поточної сторінки
+  const itemsPerPage = 5; // Кількість елементів на сторінці
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await fetchProducts(page);
-        setProducts((prevProducts) => [...prevProducts, ...data]);
-      } catch (err) {
-        setError('Помилка при завантаженні товарів');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const handleFilterChange = (e) => setFilterText(e.target.value);
+  const handleSortChange = (e) => setSortOption(e.target.value);
 
-    loadProducts();
-  }, [page]);
-
-  const loadMoreProducts = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const handleFilterChange = (e) => {
-    setFilterText(e.target.value);
-  };
-
-  const handleAddOrUpdateProduct = (product) => {
-    if (product.id) {
-      // Оновлення товару
-      setProducts((prevProducts) =>
-        prevProducts.map((p) => (p.id === product.id ? product : p))
-      );
-    } else {
-      // Додавання нового товару
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        { ...product, id: Date.now() },
-      ]);
-    }
-    setEditingProduct(null); // Скидаємо редагований товар
-  };
-
-  const handleEditProduct = (product) => {
-    setEditingProduct(product); // Заповнюємо форму для редагування товару
-  };
-
-  const handleDeleteProduct = (productId) => {
-    setProducts((prevProducts) =>
-      prevProducts.filter((product) => product.id !== productId)
-    );
-  };
-
-  const sortedAndFilteredProducts = products
+  const filteredProducts = products
     .filter((product) =>
       product.title.toLowerCase().includes(filterText.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.price - b.price;
-      } else if (sortOrder === 'desc') {
-        return b.price - a.price;
-      }
+      if (sortOption === 'priceAsc') return a.price - b.price;
+      if (sortOption === 'priceDesc') return b.price - a.price;
+      if (sortOption === 'name') return a.title.localeCompare(b.title);
       return 0;
     });
 
-    return (
-      <div>
-        <h2>Список товарів</h2>
-        <input
-          type="text"
-          placeholder="Фільтрувати товари"
-          value={filterText}
-          onChange={handleFilterChange}
-        />
-  
-        <ProductForm onSubmit={handleAddOrUpdateProduct} existingProduct={editingProduct} />
-  
-        {isLoading ? (
-          <p>Завантаження...</p>
-        ) : error ? (
-          <p>{error}</p>
+  // Розраховуємо індекси для відображення товарів на поточній сторінці
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  // Зміна сторінки
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  return (
+    <div className="marketplace">
+      <div className="marketplace-header">
+        <h2>Marketplace</h2>
+        <div className="filters">
+          <input
+            type="text"
+            placeholder="Фільтрувати товари"
+            value={filterText}
+            onChange={handleFilterChange}
+            className="filter-input"
+          />
+          <select value={sortOption} onChange={handleSortChange} className="sort-select">
+            <option value="">Сортувати...</option>
+            <option value="priceAsc">Ціна (за зростанням)</option>
+            <option value="priceDesc">Ціна (за спаданням)</option>
+            <option value="name">Назва</option>
+          </select>
+        </div>
+        <div className="actions">
+          <Link to="/add-product" className="button-link">
+            Додати новий товар
+          </Link>
+          <button onClick={clearCart} className="clear-cart-button">
+            Очистити кошик
+          </button>
+        </div>
+      </div>
+
+      <div className="product-grid">
+        {currentProducts.length === 0 ? (
+          <p>Товари не знайдено</p>
         ) : (
-          <>
-            <button onClick={clearCart}>Очистити кошик</button>
-  
-            {/* Кнопки сортування */}
-            <button onClick={() => setSortOrder('asc')}>Сортувати за ціною (зростання)</button>
-            <button onClick={() => setSortOrder('desc')}>Сортувати за ціною (спадання)</button>
-            <button onClick={() => setSortOrder(null)}>Скинути сортування</button>
-  
-            {sortedAndFilteredProducts.map((product, index) => (
-              <div key={`${product.id}-${index}`} className="product-card">
-                <h3>{product.title}</h3>
-                <p>Ціна: {product.price} грн</p>
-                <button onClick={() => addToCart(product)}>Додати в кошик</button>
-                <button onClick={() => handleEditProduct(product)}>Редагувати</button>
-                <button onClick={() => handleDeleteProduct(product.id)}>Видалити</button>
-              </div>
-            ))}
-            <button onClick={loadMoreProducts}>Завантажити більше</button>
-          </>
+          currentProducts.map((product) => (
+            <div key={product.id} className="product-card">
+              <h3>{product.title}</h3>
+              <p>Ціна: {product.price} грн</p>
+              <button onClick={() => addToCart(product)} className="add-to-cart-button">
+                Додати в кошик
+              </button>
+            </div>
+          ))
         )}
       </div>
-    );
-  };
+
+      {/* Кнопки пагінації */}
+      <div className="pagination">
+        {Array.from({ length: Math.ceil(filteredProducts.length / itemsPerPage) }).map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => paginate(index + 1)}
+            className={currentPage === index + 1 ? 'active' : ''}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default Marketplace;

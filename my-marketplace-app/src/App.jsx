@@ -1,39 +1,39 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
 import Marketplace from './pages/Marketplace';
-import { fetchProducts } from './api/productsAPI';
-import { CartProvider } from "./contexts/CartContext";
-import { UserProvider, useUser } from "./contexts/UserContext";
 import CartPage from './components/CartPage';
 import Header from './pages/Header';
+import { CartProvider } from './contexts/CartContext';
+import { UserProvider } from './contexts/UserContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import AddProduct from './components/AddProduct';
+import { ProductsProvider } from './contexts/ProductsContext';
+import EditProduct from './pages/EditProduct';
 
 function App() {
   return (
     <UserProvider>
       <CartProvider>
-        <Router>
-        <Header /> {/* Хедер тут буде відображатись на всіх сторінках */}
-          <div className="App">
-          
-            <main>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<ProtectedRoute />} />
-                <Route path="/cart" element={<CartPage />} /> {/* маршрут для кошика */}
-              </Routes>
-            </main>
-          </div>
-        </Router>
+        <ProductsProvider>
+          <Router>
+            <Header />
+            <div className="App">
+              <main>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/" element={<ProtectedRoute element={<Marketplace />} />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/add-product" element={<ProtectedRoute element={<AddProduct />} />} />
+                  <Route path="/edit-product/:id" element={<ProtectedRoute element={<EditProduct />} />} />
+                </Routes>
+              </main>
+            </div>
+          </Router>
+        </ProductsProvider>
       </CartProvider>
     </UserProvider>
   );
 }
-
-const ProtectedRoute = () => {
-  const { username } = useUser();
-  return username ? <Marketplace /> : <Navigate to="/login" />;
-};
 
 export default App;

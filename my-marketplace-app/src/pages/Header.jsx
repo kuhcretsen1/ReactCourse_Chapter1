@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import CartIcon from '../components/CartIcon';
+import { Link } from "react-router-dom";
+import CartIcon from "../components/CartIcon";
 
 const Header = () => {
   return (
@@ -8,9 +8,7 @@ const Header = () => {
         <h1>Marketplace</h1>
       </div>
       <div>
-        <Link to="/cart">
-          <CartIcon />
-        </Link>
+        <CartIcon />
       </div>
     </header>
   );
