@@ -1,20 +1,19 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { fetchProducts } from '../api/productsAPI'; // API-запит
+import { fetchProducts } from '../api/productsAPI'; 
 
-const ProductsContext = createContext(); // Створення контексту
+const ProductsContext = createContext(); 
 
-export const useProducts = () => useContext(ProductsContext); // Хук для використання контексту
+export const useProducts = () => useContext(ProductsContext); 
 
 export const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Завантаження товарів з API
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true);
       try {
-        const data = await fetchProducts(); // Завантаження з API
+        const data = await fetchProducts(); 
         setProducts(data); // Зберігаємо товари
       } catch (err) {
         console.error('Помилка завантаження товарів:', err);
@@ -26,17 +25,14 @@ export const ProductsProvider = ({ children }) => {
     loadProducts();
   }, []);
 
-  // Додавання нового товару
   const addProduct = (newProduct) => {
     setProducts((prevProducts) => [...prevProducts, { ...newProduct, id: Date.now() }]);
   };
 
-  // Видалення товару
   const deleteProduct = (id) => {
     setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
   };
 
-  // Оновлення товару
   const updateProduct = (updatedProduct) => {
     setProducts((prevProducts) =>
       prevProducts.map((product) =>

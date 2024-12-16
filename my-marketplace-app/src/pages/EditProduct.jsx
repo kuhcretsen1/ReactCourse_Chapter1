@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useProducts } from '../contexts/ProductsContext';
 
 const EditProduct = () => {
-  const { id } = useParams(); // Отримання ID товару з URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const { products, updateProduct } = useProducts();
 
@@ -18,7 +18,7 @@ const EditProduct = () => {
     if (product) {
       setProductData(product);
     } else {
-      navigate('/'); // Якщо товар не знайдено, перенаправляємо на головну
+      navigate('/'); 
     }
   }, [id, products, navigate]);
 
@@ -29,8 +29,8 @@ const EditProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateProduct(productData); // Оновлення товару
-    navigate('/'); // Повернення до списку товарів
+    updateProduct(productData); 
+    navigate('/'); 
   };
 
   return (

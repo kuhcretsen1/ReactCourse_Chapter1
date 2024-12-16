@@ -5,13 +5,13 @@ import { useUser } from '../contexts/UserContext';
 const Login = () => {
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
-  const { setUsername } = useUser(); // Отримуємо функцію для встановлення імені користувача з контексту
+  const { setUsername } = useUser(); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
-      setUsername(inputValue); // Встановлюємо ім'я користувача в контексті
-      navigate('/'); // Перенаправляємо на основну сторінку після входу
+      setUsername(inputValue); 
+      navigate('/'); 
     }
   };
 

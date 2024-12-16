@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import CartIcon from "../components/CartIcon";
 import { useUser } from "../contexts/UserContext";
 

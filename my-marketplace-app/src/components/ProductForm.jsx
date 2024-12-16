@@ -28,8 +28,8 @@ const ProductForm = ({ onSubmit, existingProduct }) => {
       id: existingProduct ? existingProduct.id : null,
     };
 
-    onSubmit(product); // передаємо оновлені або нові дані в Marketplace
-    resetForm(); // очищуємо форму після збереження
+    onSubmit(product);
+    resetForm(); 
   };
 
   const resetForm = () => {

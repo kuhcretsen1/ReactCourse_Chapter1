@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../contexts/ProductsContext';
-import { useForm } from 'react-hook-form'; // Імпортуємо useForm
+import { useForm } from 'react-hook-form'; 
 
 const AddProduct = () => {
   const { addProduct } = useProducts();
@@ -11,7 +11,7 @@ const AddProduct = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm(); // Використовуємо useForm для роботи з формою та валідацією
+  } = useForm(); 
 
   const onSubmit = (data) => {
     addProduct({
@@ -19,9 +19,10 @@ const AddProduct = () => {
       price: parseFloat(data.price),
       description: data.description,
     });
-    navigate('/'); // Повертаємось до маркетплейсу
+    navigate('/'); 
   };
 
+  
   return (
     <div>
       <h2>Додати новий товар</h2>

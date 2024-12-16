@@ -1,6 +1,6 @@
 
 import { Navigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext'; // Не забудь вказати правильний шлях
+import { useUser } from '../contexts/UserContext'; 
 
 const ProtectedRoute = ({ element }) => {
   const { username } = useUser();

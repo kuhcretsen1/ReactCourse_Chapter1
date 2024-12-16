@@ -1,19 +1,14 @@
 import React from 'react';
-import ProductCard from './ProductCard';
+import ProductCard from '../ProductCard/ProductCard';
 
 const ProductList = ({ products, onAddToCart }) => {
   return (
-    <div style={listStyle}>
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
       ))}
     </div>
   );
-};
-
-const listStyle = {
-  display: 'flex',
-  flexDirection: 'column',
 };
 
 export default ProductList;

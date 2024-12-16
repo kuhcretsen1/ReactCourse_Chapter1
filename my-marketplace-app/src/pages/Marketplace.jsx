@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useProducts } from '../contexts/ProductsContext';
 import { Link } from 'react-router-dom';
-import './Marketplace.css';
+import '../styles/Marketplace.css';
 
 const Marketplace = () => {
   const { addToCart, clearCart } = useCart();
   const { products } = useProducts();
   const [filterText, setFilterText] = useState('');
   const [sortOption, setSortOption] = useState('');
-  const [currentPage, setCurrentPage] = useState(1); // Стан для поточної сторінки
-  const itemsPerPage = 5; // Кількість елементів на сторінці
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 5; 
 
   const handleFilterChange = (e) => setFilterText(e.target.value);
   const handleSortChange = (e) => setSortOption(e.target.value);
@@ -27,12 +27,10 @@ const Marketplace = () => {
       return 0;
     });
 
-  // Розраховуємо індекси для відображення товарів на поточній сторінці
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  // Зміна сторінки
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -59,8 +57,7 @@ const Marketplace = () => {
             Додати новий товар
           </Link>
           <button onClick={clearCart} className="clear-cart-button">
-            Очистити кошик
-            
+            Очистити кошик 
           </button>
         </div>
       </div>
@@ -81,7 +78,7 @@ const Marketplace = () => {
         )}
       </div>
 
-      {/* Кнопки пагінації */}
+      {/* */}
       <div className="pagination">
         {Array.from({ length: Math.ceil(filteredProducts.length / itemsPerPage) }).map((_, index) => (
           <button

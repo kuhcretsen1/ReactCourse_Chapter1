@@ -6,9 +6,9 @@ export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
 
   const logout = () => {
-    setUsername(null); // Очистити ім'я користувача
-    localStorage.removeItem('authToken'); // Якщо є токен авторизації, видаляємо його
-    window.location.href = '/login'; // Перенаправлення на сторінку входу
+    setUsername(null); 
+    localStorage.removeItem('authToken');
+    window.location.href = '/login';
   };
 
   return (
